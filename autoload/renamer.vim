@@ -58,7 +58,7 @@ else
   let s:filePathIllegalPatternsGuide = []
 endif
 
-function! renamer#start(needNewWindow, startline, ...) "{{{1
+function! renamer#start(needNewWindow, startline, directory) "{{{1
   " Check version
   s:alert()
 
@@ -92,8 +92,8 @@ function! renamer#start(needNewWindow, startline, ...) "{{{1
 
   " Process optional parameters to this function and
   " set the directory to process
-  if a:1 != ''
-    let b:renamerDirectory = s:Path(a:1)
+  if !empty(a:directory)
+    let b:renamerDirectory = s:Path(a:directory)
   elseif !exists('b:renamerDirectory')
     let b:renamerDirectory = s:Path(getcwd())
   endif

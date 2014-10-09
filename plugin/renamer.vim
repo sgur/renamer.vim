@@ -1,7 +1,8 @@
 " renamer.vim
 " Maintainer:   John Orr (john undersc0re orr yah00 c0m)
-" Version:      1.4
-" Last Change:  16 November 2011
+" Maintainer:   sgur (sgurrr+vim at gmail dot com)
+" Version:      2.0pre
+" Last Change:  8 October 2014
 
 " Changelog:   {{{1
 " 1.0 - initial functionality
@@ -22,6 +23,8 @@
 "       Thanks to Adam Courtemanche for finding and fixing the bug!
 " 1.4 - fix permitted filenames problem on Mac OS - thanks Adam Courtemanche.
 "     - fix bug when launching from within an existing buffer.
+" 2.0pre
+"     - make the plugin autoloadable
 
 " Reload guard and 'compatible' handling {{{1
 let s:save_cpo = &cpo
@@ -78,7 +81,7 @@ let g:RenamerHighlightForOriginalDirectoryName = get(g:, 'RenamerHighlightForOri
 " Commands {{{1
 " To run the script
 if !exists(':Renamer')
-  command -bang -nargs=? -complete=dir Renamer :call <SID>StartRenamer(1,-1,'<args>')
+  command -bang -nargs=? -complete=dir Renamer :call renamer#start(1,-1,<q-args>)
 endif
 
 
