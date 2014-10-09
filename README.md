@@ -15,7 +15,9 @@ the vim file explorer (netrw.vim), or the command line.  When you want to
 rename a bunch of files, especially when you want to do a common text
 manipulation to those file names, this plugin may help.  It shows you all the
 files in the current directory, and lets you edit their names in the vim
-buffer.  When you're ready, issue the command `:Ren` to perform the mass
+buffer.
+
+When you're ready, issue the command `:write` or `:update` to perform the mass
 rename.
 
 The intention is to rename files in the same directory, but relative
