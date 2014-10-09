@@ -25,6 +25,7 @@
 "     - fix bug when launching from within an existing buffer.
 " 2.0pre
 "     - make the plugin autoloadable
+"     - change option g:RenamerWildIgnoreSetting -> g:RenamerUseWildIgnore
 
 " Reload guard and 'compatible' handling {{{1
 let s:save_cpo = &cpo
@@ -49,8 +50,8 @@ let g:RenamerOriginalFileWindowEnabled = get(g:, 'RenamerOriginalFileWindowEnabl
 " Controls whether the resolved targets of any links will be shown as comments
 let g:RenamerShowLinkTargets = get(g:, 'RenamerShowLinkTargets', 1)
 
-" g:RenamerWildIgnoreSetting {{{2
-let g:RenamerWildIgnoreSetting = get(g:, 'RenamerWildIgnoreSetting', 'VIM_WILDIGNORE_SETTING')
+" g:RenamerUseWildIgnore {{{2
+let g:RenamerUseWildIgnore = get(g:, 'RenamerUseWildIgnore', 0)
 
 " g:RenamerSupportColonWToRename {{{2
 let g:RenamerSupportColonWToRename = get(g:, 'RenamerSupportColonWToRename', 0)

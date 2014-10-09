@@ -62,32 +62,16 @@ function! renamer#start(needNewWindow, startLine, directory) "{{{1
   let &titlestring='Vim Renamer ('.b:renamerDirectory.') - '.v:servername
   set title
 
-  " Get a list of all the files
-  " Since glob follows 'wildignore' settings and this may well be undesirable,
-  " we may ignore such directives
-  if g:RenamerWildIgnoreSetting != 'VIM_WILDIGNORE_SETTING'
-    let savedWildignoreSetting = &wildignore
-    let &wildignore = g:RenamerWildIgnoreSetting
-  endif
-
   " Unix and Windows need different things due to differences in possible filenames
   if has('unix')
-    let pathfiles = s:Path(glob(b:renamerDirectoryEscaped . "/*"))
+    let pathfiles = globpath(b:renamerDirectoryEscaped, "*", !g:RenamerUseWildIgnore, 1)
   else
-    let pathfiles = s:Path(glob(b:renamerDirectory . "/*"))
+    let pathfiles = globpath(b:renamerDirectory, "*", !g:RenamerUseWildIgnore, 1)
   endif
-  if pathfiles != "" && pathfiles !~ "\n$"
-    let pathfiles .= "\n"
-  endif
-
-  " Restore Wildignore settings
-  if g:RenamerWildIgnoreSetting != 'VIM_WILDIGNORE_SETTING'
-    let &wildignore = savedWildignoreSetting
-  endif
-
+  let pathfiles = map(pathfiles, 's:Path(v:val)')
 
   " Remove the directory from the filenames
-  let filenames = substitute(pathfiles, b:renamerDirectoryEscaped . '/', '', 'g')
+  let filenames = map(copy(pathfiles), 'fnamemodify(v:val, isdirectory(v:val) ? ":p:h:t" : ":p:t")')
 
   " Calculate what to display on the screen and what to keep for when the
   " process is done
@@ -102,8 +86,8 @@ function! renamer#start(needNewWindow, startLine, directory) "{{{1
   "    specific line
   " ...however... some of these things could be rationalised using
   " multi-dimensional arrays.
-  let pathfileList = sort(split(pathfiles, "\n"), 1) " List including full pathnames
-  let filenameList = sort(split(filenames, "\n"), 1) " List of just filenames
+  let pathfileList = sort(pathfiles, 1) " List including full pathnames
+  let filenameList = sort(filenames, 1) " List of just filenames
   let numFiles = len(pathfileList)
   let writeableFilenames = []                        " The name only (no path) of all writeable files
   let writeableFilenamesEntryNums = []               " Used to calculate the final line number the name appears on
