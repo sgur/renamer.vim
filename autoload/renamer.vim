@@ -60,7 +60,7 @@ endif
 
 function! renamer#start(needNewWindow, startline, directory) "{{{1
   " Check version
-  s:alert()
+  call s:alert()
 
   " The main function that starts the app
 
@@ -333,7 +333,7 @@ function! renamer#start(needNewWindow, startline, directory) "{{{1
   if g:RenamerSupportColonWToRename
     " Enable :w<cr> to work as well
     cnoremap <buffer> <CR> <C-\>e<SID>CheckUserCommand()<CR><CR>
-    function! <SID>CheckUserCommand()
+    function! s:CheckUserCommand()
       let cmd = getcmdline()
       if cmd == 'w'
         let cmd = 'Ren'
@@ -358,7 +358,7 @@ function! renamer#start(needNewWindow, startline, directory) "{{{1
 
   " If the user wants the window with with original files, create it
   if g:RenamerOriginalFileWindowEnabled
-    call <SID>CreateOriginalFileWindow(a:needNewWindow, b:renamerMaxWidth, b:renamerEntryDisplayText)
+    call s:CreateOriginalFileWindow(a:needNewWindow, b:renamerMaxWidth, b:renamerEntryDisplayText)
   endif
 
   " Restore things
@@ -374,7 +374,7 @@ function! s:alert()
   endif
 endfunction
 
-function! <SID>CreateOriginalFileWindow(needNewWindow, maxWidth, entryDisplayText) "{{{1
+function! s:CreateOriginalFileWindow(needNewWindow, maxWidth, entryDisplayText) "{{{1
 
   let currentLine = line('.')
   call cursor(1,1)
@@ -450,7 +450,7 @@ function! <SID>CreateOriginalFileWindow(needNewWindow, maxWidth, entryDisplayTex
 
 endfunction
 
-function! <SID>PerformRename() "{{{1
+function! s:PerformRename() "{{{1
 " The function to do the renaming
 
   " Prevent a report of our actions from showing up
@@ -581,11 +581,11 @@ function! <SID>PerformRename() "{{{1
   let &report=oldRep
   let &sc = save_sc
 
-  exec 'call <SNR>'.s:sid.'_StartRenamer(0,-1,b:renamerDirectory)'
+  call renamer#start(0, -1, b:renamerDirectory)
 
 endfunction
 
-function! <SID>ChangeDirectory() "{{{1
+function! s:ChangeDirectory() "{{{1
   let line = getline('.')
   exec "let isLinkedDir = line =~ '" . s:linksTo . ".*\/$'"
   if isLinkedDir
@@ -626,10 +626,10 @@ function! <SID>ChangeDirectory() "{{{1
   exec 'cd "'.b:renamerDirectory . '"'
 
   " Now update the display for the new directory
-  exec 'call <SNR>'.s:sid.'_StartRenamer(0,lineForNewBuffer,b:renamerDirectory)'
+  call renamer#start(0, lineForNewBuffer, b:renamerDirectory)
 endfunction
 
-function! <SID>DeleteEntry() "{{{1
+function! s:DeleteEntry() "{{{1
   let lineNum = line('.')
   let entry = getline(lineNum)
   " Remove leading comment chars
@@ -707,17 +707,17 @@ function! <SID>DeleteEntry() "{{{1
     endif
 
     " Restart renamer to reset everything
-    exec 'call <SNR>'.s:sid.'_StartRenamer(0,lineNum,b:renamerDirectory)'
+    call renamer#start(0, lineNum, b:renamerDirectory)
 
   endif
 
 endfunction
 
-function! <SID>ToggleOriginalFilesWindow() "{{{1
+function! s:ToggleOriginalFilesWindow() "{{{1
   " Toggle the original files window
   if g:RenamerOriginalFileWindowEnabled == 0
     let g:RenamerOriginalFileWindowEnabled = 2 " 2 => create the window as well
-    call <SID>CreateOriginalFileWindow(0, b:renamerMaxWidth, b:renamerEntryDisplayText)
+    call s:CreateOriginalFileWindow(0, b:renamerMaxWidth, b:renamerEntryDisplayText)
   else
     wincmd h
     bdelete
@@ -725,9 +725,9 @@ function! <SID>ToggleOriginalFilesWindow() "{{{1
   endif
 endfunction
 
-function! <SID>Refresh() "{{{1
+function! s:Refresh() "{{{1
   " Update the display in case directory contents have changed outside vim
-  exec 'call <SNR>'.s:sid.'_StartRenamer(0,-1,b:renamerDirectory)'
+  call renamer#start(0, -1, b:renamerDirectory)
 endfunction
 
 " Support functions        {{{1
